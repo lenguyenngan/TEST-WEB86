@@ -22,7 +22,6 @@ router.post("/register", async (req, res) => {
       return res.status(409).json({ error: "Email already exists" });
     }
 
-    // Mã hóa mật khẩu
     const hashedPassword = await hash(password, 10);
 
     // Tạo người dùng mới
@@ -56,13 +55,10 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Kiểm tra mật khẩu có khớp không
     const isMatch = await compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
-
-    // Tạo API key cho người dùng sau khi đăng nhập thành công
     const apiKey = generateApiKey(user._id, user.email);
     user.apiKey = apiKey;
     await user.save();
